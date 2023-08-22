@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float jetpackForce = 75.0f; 
-    public float forwardMovementSpeed = 5.0f; 
+    public float jetpackForce; 
+    public float forwardMovementSpeed; 
 
     private Rigidbody2D playerRigidbody; 
-    private bool jetpackActive = false; 
+    private bool jetpackActive = false;
+
+    // bool for when mans dies
+    private bool isDead = false;
+    private bool movement = true;
 
     void Start()
     {
@@ -17,23 +21,37 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // if statement to check if mans is dead
+        if (!isDead)
         {
-            jetpackActive = true;
-        }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                jetpackActive = true;
+            }
 
-        if (Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                jetpackActive = false;
+            }
+        }
+        else
         {
+            StartCoroutine(Death());
             jetpackActive = false;
         }
+        
     }
 
     void FixedUpdate()
     {
-        // Apply forward movement
-        Vector2 newVelocity = playerRigidbody.velocity;
-        newVelocity.x = forwardMovementSpeed;
-        playerRigidbody.velocity = newVelocity;
+        // if player is alive and moving 
+        if (movement)
+        {
+            // Apply forward movement
+            Vector2 newVelocity = playerRigidbody.velocity;
+            newVelocity.x = forwardMovementSpeed;
+            playerRigidbody.velocity = newVelocity;
+        }
 
         // Apply the jetpack's upward force
         if (jetpackActive)
@@ -41,4 +59,19 @@ public class PlayerController : MonoBehaviour
             playerRigidbody.AddForce(new Vector2(0, jetpackForce));
         }
     }
+
+    // timer to stop movement after player death
+    public IEnumerator Death()
+    {
+        yield return new WaitForSeconds(2);
+        movement = false;
+    }
+
+
+    public void SetIsDead(bool temp)
+    {
+        isDead = temp;
+    }
 }
+
+    
