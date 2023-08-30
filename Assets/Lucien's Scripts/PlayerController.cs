@@ -25,12 +25,16 @@ public class PlayerController : MonoBehaviour
     private bool speedBoostActive = false;
     private bool shieldActive = false;
     private bool rocketBoostActive = false;
-    private float rocketBoostDuration = 5.0f;
+    //private float rocketBoostDuration = 5.0f;
     public float rocketBoostForce = 10.0f;
 
     public GameObject[] powerUpPrefabs; // Array of power-up prefabs
 
-    private float nextPowerUpDistance = 1000.0f;
+    private float nextPowerUpDistance = 30.0f;
+
+    private float speedBoostTimer = 0.0f; // Timer for speed boost
+    private float shieldTimer = 0.0f; // Timer for shield
+    private float rocketBoostTimer = 0.0f; // Timer for rocket boost
 
     void Start()
     {
@@ -57,11 +61,39 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(Death());
             jetpackActive = false;
         }
-        
+        if (speedBoostActive)
+        {
+            speedBoostTimer -= Time.deltaTime;
+            if (speedBoostTimer <= 0)
+            {
+                DeactivateSpeedBoost();
+            }
+        }
+
+        if (shieldActive)
+        {
+            shieldTimer -= Time.deltaTime;
+            if (shieldTimer <= 0)
+            {
+                DeactivateShield();
+            }
+        }
+
+        if (rocketBoostActive)
+        {
+            rocketBoostTimer -= Time.deltaTime;
+            if (rocketBoostTimer <= 0)
+            {
+                DeactivateRocketBoost();
+            }
+        }
     }
 
     void FixedUpdate()
     {
+        Debug.Log("FixedUpdate is running");
+
+        Debug.Log("Checking if power-up should spawn");
         // if player is alive and moving 
         if (movement)
         {
@@ -72,24 +104,21 @@ public class PlayerController : MonoBehaviour
 
             // Update the distance traveled
             distanceTraveled += forwardMovementSpeed * Time.fixedDeltaTime;
-
-            if (Mathf.FloorToInt(distanceTraveled) % 100 == 0 && distanceTraveled != 0)
-            {
-                // Increase the forward movement speed
-                forwardMovementSpeed += 0.50f;
-            }
-
             distanceText.text = "Distance: " + Mathf.FloorToInt(distanceTraveled) + " m";
         }
 
+        // Check if it's time to spawn a power-up
         if (distanceTraveled >= nextPowerUpDistance)
         {
             // Spawn a random power-up
             SpawnPowerUp();
 
             // Update the distance for the next power-up spawn
-            nextPowerUpDistance += 1000.0f;
+            nextPowerUpDistance = Mathf.FloorToInt(distanceTraveled) + 30.0f; // Increment by 30 meters
         }
+
+        Debug.Log("Distance Traveled: " + distanceTraveled);  
+        Debug.Log("Next Power-Up Distance: " + nextPowerUpDistance);
 
         // Apply the jetpack's upward force
         if (jetpackActive)
@@ -139,32 +168,59 @@ public class PlayerController : MonoBehaviour
         // Check for power-ups
         if (other.CompareTag("SpeedBoost"))
         {
-            // Activate speed boost
-            forwardMovementSpeed *= 2; // Double the speed
-            speedBoostActive = true;
+            ActivateSpeedBoost();
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("Shield"))
         {
-            // Activate shield
-            shieldActive = true;
+            ActivateShield();
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("RocketBoost"))
         {
-            // Activate rocket boost
-            rocketBoostActive = true;
+            ActivateRocketBoost();
             Destroy(other.gameObject);
-
-            // Deactivate rocket boost after a duration
-            Invoke("DeactivateRocketBoost", rocketBoostDuration);
         }
     }
 
     // Method to deactivate rocket boost
+    private void ActivateSpeedBoost()
+    {
+        forwardMovementSpeed *= 1.5f; // Increase speed by 50%
+        speedBoostActive = true;
+        speedBoostTimer = 5.0f; // Set duration
+    }
+
+    private void DeactivateSpeedBoost()
+    {
+        forwardMovementSpeed /= 1.5f; // Reset speed
+        speedBoostActive = false;
+    }
+
+    private void ActivateShield()
+    {
+        shieldActive = true;
+        shieldTimer = 10.0f; // Set duration
+    }
+
+    private void DeactivateShield()
+    {
+        shieldActive = false;
+    }
+
+    private void ActivateRocketBoost()
+    {
+        rocketBoostActive = true;
+        rocketBoostTimer = 5.0f; // Set duration
+        forwardMovementSpeed *= 1.1f; // Increase speed by 10%
+        jetpackActive = true; // Keep the player flying
+    }
+
     private void DeactivateRocketBoost()
     {
         rocketBoostActive = false;
+        forwardMovementSpeed /= 1.1f; // Reset speed
+        jetpackActive = false; // Allow the player to fall
     }
 
     private void SpawnPowerUp()
@@ -173,11 +229,11 @@ public class PlayerController : MonoBehaviour
         GameObject powerUpPrefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
 
         // Calculate the spawn position just in front of the player, out of view
-        Vector3 spawnPosition = transform.position + new Vector3(20.0f, Random.Range(-5.0f, 5.0f), 0);
+        float randomY = Random.Range(-4.0f, 4.0f); // Random Y-coordinate between -4.93 and 4.92
+        Vector3 spawnPosition = new Vector3(transform.position.x + 20.0f, randomY, transform.position.z);
 
         // Instantiate the power-up
         Instantiate(powerUpPrefab, spawnPosition, Quaternion.identity);
     }
+
 }
-
-

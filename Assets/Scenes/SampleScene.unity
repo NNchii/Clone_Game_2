@@ -249,8 +249,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 169520876}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.26, y: 4.92, z: 0}
-  m_LocalScale: {x: 75, y: 1, z: 1}
+  m_LocalPosition: {x: 78.2528, y: 4.92, z: 0}
+  m_LocalScale: {x: 200.98793, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -943,7 +943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac746b06c83a54c49ba0839e78698383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jetpackForce: 25
+  jetpackForce: 30
   forwardMovementSpeed: 5
   distanceText: {fileID: 274956503}
   coinText: {fileID: 1695174452}
