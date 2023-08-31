@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 10f;
     private PlayerController playerController;
     // Start is called before the first frame update
     void Start()

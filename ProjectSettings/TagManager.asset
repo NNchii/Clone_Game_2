@@ -9,6 +9,7 @@ TagManager:
   - Shield
   - RocketBoost
   - Rocket
+  - Laser
   layers:
   - Default
   - TransparentFX

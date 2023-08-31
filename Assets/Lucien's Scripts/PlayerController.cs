@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
 
     public void ResetPlayer()
     {
-        Debug.Log("ResetPlayer called");
+        //Debug.Log("ResetPlayer called");
 
         // Reset player position to a Transform object's position
         transform.position = respawnPoint.position;
@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour
     }
     public void ToggleGameplay(bool isActive)
     {
-        Debug.Log("ToggleGameplay called with: " + isActive);
+        //Debug.Log("ToggleGameplay called with: " + isActive);
         movement = isActive;
         // Add any other gameplay elements you want to pause here
     }
@@ -350,7 +350,6 @@ public class PlayerController : MonoBehaviour
     public IEnumerator RocketWait(int num)
     {
         rocketCoolDown = true;
-        Debug.Log(num);
         yield return new WaitForSeconds(num);
 
         if (Random.Range(1, 10) >= 7)
@@ -372,9 +371,6 @@ public class PlayerController : MonoBehaviour
             GameObject rocket = Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
             Destroy(rocket, 10);
         }
-
-
         rocketCoolDown = false;
-        Debug.Log("Done");
     }
 }
