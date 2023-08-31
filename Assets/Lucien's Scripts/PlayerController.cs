@@ -44,13 +44,27 @@ public class PlayerController : MonoBehaviour
     private int rocketBoostLevel = 0;
 
     public int upgradeIncrement = 50;
+
+    private bool rocketCoolDown;
+
+    public GameObject rocketPrefab;
+
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
+        
+        StartCoroutine(RocketWait(Random.Range(5, 15)));
     }
 
     void Update()
     {
+
+        if (!rocketCoolDown)
+        {
+            StartCoroutine(RocketWait(Random.Range(5, 15)));
+        }
+        
+        
         // if statement to check if mans is dead
         if (!isDead)
         {
@@ -103,6 +117,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        
         // if player is alive and moving 
         if (movement)
         {
@@ -330,5 +345,36 @@ public class PlayerController : MonoBehaviour
     {
         coinsCollected = newCount;
         coinText.text = "Coins: " + coinsCollected; // Update the UI
+    }
+
+    public IEnumerator RocketWait(int num)
+    {
+        rocketCoolDown = true;
+        Debug.Log(num);
+        yield return new WaitForSeconds(num);
+
+        if (Random.Range(1, 10) >= 7)
+        {
+            for (int i = 0; i <= Random.Range(1, 3); i++)
+            {
+                float randomY = Random.Range(-4.0f, 4.0f); // Random Y-coordinate between -4.93 and 4.92
+                Vector3 spawnPosition = new Vector3(transform.position.x + 40.0f, randomY, transform.position.z);
+
+                GameObject rocket = Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
+                Destroy(rocket, 10);
+            }
+        }
+        else
+        {
+            float randomY = Random.Range(-4.0f, 4.0f); // Random Y-coordinate between -4.93 and 4.92
+            Vector3 spawnPosition = new Vector3(transform.position.x + 40.0f, randomY, transform.position.z);
+
+            GameObject rocket = Instantiate(rocketPrefab, spawnPosition, Quaternion.identity);
+            Destroy(rocket, 10);
+        }
+
+
+        rocketCoolDown = false;
+        Debug.Log("Done");
     }
 }

@@ -8,6 +8,7 @@ TagManager:
   - SpeedBoost
   - Shield
   - RocketBoost
+  - Rocket
   layers:
   - Default
   - TransparentFX
