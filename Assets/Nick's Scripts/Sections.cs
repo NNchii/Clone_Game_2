@@ -9,7 +9,7 @@ public class Sections : MonoBehaviour
     private LaserManager laserManager;
     private string lastSection = "";
 
-    private bool timerActive = false;
+    
 
     // Start is called before the first frame update
     void Start()
