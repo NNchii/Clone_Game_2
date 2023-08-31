@@ -1,15 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float jetpackForce; 
-    public float forwardMovementSpeed; 
+    public float jetpackForce;
+    public float forwardMovementSpeed;
 
-    private Rigidbody2D playerRigidbody; 
+    private Rigidbody2D playerRigidbody;
     private bool jetpackActive = false;
 
     // bool for when mans dies
@@ -36,6 +34,11 @@ public class PlayerController : MonoBehaviour
     private float shieldTimer = 0.0f; // Timer for shield
     private float rocketBoostTimer = 0.0f; // Timer for rocket boost
 
+    public ShopController shopController;
+
+    public Transform respawnPoint;
+    private bool deathCoroutineStarted = false;
+
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
@@ -58,8 +61,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(Death());
-            jetpackActive = false;
+            if (!deathCoroutineStarted)
+            {
+                StartCoroutine(Death());
+                deathCoroutineStarted = true;
+                jetpackActive = false;
+            }
         }
         if (speedBoostActive)
         {
@@ -91,9 +98,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log("FixedUpdate is running");
-
-        Debug.Log("Checking if power-up should spawn");
         // if player is alive and moving 
         if (movement)
         {
@@ -117,9 +121,6 @@ public class PlayerController : MonoBehaviour
             nextPowerUpDistance = Mathf.FloorToInt(distanceTraveled) + 30.0f; // Increment by 30 meters
         }
 
-        Debug.Log("Distance Traveled: " + distanceTraveled);  
-        Debug.Log("Next Power-Up Distance: " + nextPowerUpDistance);
-
         // Apply the jetpack's upward force
         if (jetpackActive)
         {
@@ -140,12 +141,36 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         movement = false;
+        isDead = true;  // Set isDead to true
+        shopController.OpenShop();
     }
-
 
     public void SetIsDead(bool temp)
     {
         isDead = temp;
+    }
+
+    public void ResetPlayer()
+    {
+        Debug.Log("ResetPlayer called");
+
+        // Reset player position to a Transform object's position
+        transform.position = respawnPoint.position;
+
+        // Reset player state
+        isDead = false;
+        movement = true;
+
+        // Reset other gameplay elements if needed
+        distanceTraveled = 0.0f;
+        distanceText.text = "Distance: 0 m";
+        deathCoroutineStarted = false;
+    }
+    public void ToggleGameplay(bool isActive)
+    {
+        Debug.Log("ToggleGameplay called with: " + isActive);
+        movement = isActive;
+        // Add any other gameplay elements you want to pause here
     }
 
     // Method to get the distance traveled
@@ -236,4 +261,15 @@ public class PlayerController : MonoBehaviour
         Instantiate(powerUpPrefab, spawnPosition, Quaternion.identity);
     }
 
+    // Add a public method to get and set the coin count
+    public int GetCoinsCollected()
+    {
+        return coinsCollected;
+    }
+
+    public void SetCoinsCollected(int newCount)
+    {
+        coinsCollected = newCount;
+        coinText.text = "Coins: " + coinsCollected; // Update the UI
+    }
 }
