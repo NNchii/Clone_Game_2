@@ -20,9 +20,9 @@ public class PlayerController : MonoBehaviour
     public TMP_Text distanceText;
     public TMP_Text coinText;
 
-    private bool speedBoostActive = false;
-    private bool shieldActive = false;
-    private bool rocketBoostActive = false;
+    public bool speedBoostActive = false;
+    public bool shieldActive = false;
+    public bool rocketBoostActive = false;
     //private float rocketBoostDuration = 5.0f;
     public float rocketBoostForce = 10.0f;
 
@@ -48,12 +48,16 @@ public class PlayerController : MonoBehaviour
     private bool rocketCoolDown;
 
     public GameObject rocketPrefab;
+    private SpriteRenderer spriteRenderer;
+
 
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         
         StartCoroutine(RocketWait(Random.Range(5, 15)));
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -201,11 +205,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("Collision detected with: " + other.tag);  // Debug statement
+
         if (other.CompareTag("Coin"))
         {
             // Increment the coin counter
             coinsCollected++;
-
             // Optionally, destroy the coin object
             Destroy(other.gameObject);
         }
@@ -213,20 +218,40 @@ public class PlayerController : MonoBehaviour
         // Check for power-ups
         if (other.CompareTag("SpeedBoost"))
         {
+            Debug.Log("SpeedBoost activated");  // Debug statement
             ActivateSpeedBoost();
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("Shield"))
         {
+            Debug.Log("Shield activated");  // Debug statement
             ActivateShield();
             Destroy(other.gameObject);
         }
         else if (other.CompareTag("RocketBoost"))
         {
+            Debug.Log("RocketBoost activated");  // Debug statement
             ActivateRocketBoost();
             Destroy(other.gameObject);
         }
+        else if (other.CompareTag("Obstacle"))  // Assuming the obstacle tag is "Obstacle"
+        {
+            Debug.Log("Obstacle detected");  // Debug statement
+
+            if (!shieldActive && !rocketBoostActive)  // Check if either power-up is active
+            {
+                Debug.Log("Player should die now");  // Debug statement
+                                                     // Code to kill the player
+                isDead = true;
+                StartCoroutine(Death());  // Assuming you want to call the Death coroutine here
+            }
+            else
+            {
+                Debug.Log("Player has an active power-up, should not die");  // Debug statement
+            }
+        }
     }
+
 
     // Method to deactivate rocket boost
     private void ActivateSpeedBoost()
@@ -234,23 +259,27 @@ public class PlayerController : MonoBehaviour
         forwardMovementSpeed *= (1.5f + 0.1f * speedBoostLevel);
         speedBoostTimer = 5.0f + speedBoostLevel;
         speedBoostActive = true;
+        spriteRenderer.color = Color.green;  // Set the player color to green
     }
 
     private void DeactivateSpeedBoost()
     {
         forwardMovementSpeed /= 1.5f; // Reset speed
         speedBoostActive = false;
+        spriteRenderer.color = Color.white;  // Reset the player color to white
     }
 
     private void ActivateShield()
     {
         shieldActive = true;
         shieldTimer = 10.0f + shieldLevel;
+        spriteRenderer.color = Color.blue;  // Set the player color to blue
     }
 
     private void DeactivateShield()
     {
         shieldActive = false;
+        spriteRenderer.color = Color.white;  // Reset the player color to white
     }
 
     private void ActivateRocketBoost()
@@ -259,6 +288,7 @@ public class PlayerController : MonoBehaviour
         rocketBoostTimer = 5.0f + rocketBoostLevel;
         forwardMovementSpeed *= (1.1f + 0.05f * rocketBoostLevel);
         jetpackActive = true;
+        spriteRenderer.color = new Color(1.0f, 0.5f, 0.0f);  // Set the player color to orange
     }
 
     private void DeactivateRocketBoost()
@@ -266,6 +296,7 @@ public class PlayerController : MonoBehaviour
         rocketBoostActive = false;
         forwardMovementSpeed /= 1.1f; // Reset speed
         jetpackActive = false; // Allow the player to fall
+        spriteRenderer.color = Color.white;  // Reset the player color to white
     }
 
     public int GetSpeedBoostLevel()

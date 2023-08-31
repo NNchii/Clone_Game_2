@@ -20,9 +20,13 @@ public class Obstacle : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Player")
+        if (collision.tag == "Player")
         {
-            playerController.SetIsDead(true);
+            if (!playerController.shieldActive && !playerController.rocketBoostActive)  // Check if either power-up is active
+            {
+                playerController.SetIsDead(true);
+            }
         }
     }
+
 }

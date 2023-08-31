@@ -37,6 +37,9 @@ public class Sections : MonoBehaviour
             }
 
             GameObject newSection = Instantiate(levelManager.GetSectionPrefab(temp), new Vector3(transform.parent.position.x + 50, 0, 0), Quaternion.identity);
+
+            newSection.tag = "Obstacle";
+
             lastSection = levelManager.GetSectionPrefab(temp).name;
 
             levelManager.AddOnScreen(newSection);
