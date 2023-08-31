@@ -1369,6 +1369,12 @@ MonoBehaviour:
   playerController: {fileID: 1725439002}
   shopPanel: {fileID: 1541216465}
   coinText: {fileID: 1695174452}
+  speedBoostButton: {fileID: 1874494550}
+  shieldButton: {fileID: 1723576810}
+  rocketBoostButton: {fileID: 2074897517}
+  speedBoostCostText: {fileID: 1705539396}
+  shieldCostText: {fileID: 1561859645}
+  rocketBoostCostText: {fileID: 539004104}
 --- !u!1 &1561859643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1914,8 +1920,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -140, y: -206}
-  m_SizeDelta: {x: 248.5717, y: 109.8883}
+  m_AnchoredPosition: {x: -152.97, y: -206}
+  m_SizeDelta: {x: 274.5155, y: 109.8883}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1723576810
 MonoBehaviour:
@@ -1960,7 +1966,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1723576811}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1725439002}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: UpgradeShield
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1723576811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2042,6 +2060,7 @@ MonoBehaviour:
   - {fileID: 5246761178907644973, guid: 31600648c30ef934599f4e8803eb4882, type: 3}
   shopController: {fileID: 1541216469}
   respawnPoint: {fileID: 2143962103}
+  upgradeIncrement: 50
 --- !u!50 &1725439003
 Rigidbody2D:
   serializedVersion: 4
@@ -2250,8 +2269,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -140, y: -359}
-  m_SizeDelta: {x: 248.5717, y: 109.8883}
+  m_AnchoredPosition: {x: -152.97, y: -360}
+  m_SizeDelta: {x: 274.52, y: 109.8883}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1874494550
 MonoBehaviour:
@@ -2296,7 +2315,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1874494551}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1725439002}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: UpgradeSpeedBoost
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1874494551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2507,8 +2538,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140, y: -206}
-  m_SizeDelta: {x: 248.5717, y: 109.8883}
+  m_AnchoredPosition: {x: 146, y: -206}
+  m_SizeDelta: {x: 274.51, y: 109.8883}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2074897517
 MonoBehaviour:
@@ -2553,7 +2584,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2074897518}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1725439002}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: UpgradeRocketBoost
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2074897518
 MonoBehaviour:
   m_ObjectHideFlags: 0

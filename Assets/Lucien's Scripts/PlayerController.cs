@@ -39,6 +39,11 @@ public class PlayerController : MonoBehaviour
     public Transform respawnPoint;
     private bool deathCoroutineStarted = false;
 
+    private int speedBoostLevel = 0;
+    private int shieldLevel = 0;
+    private int rocketBoostLevel = 0;
+
+    public int upgradeIncrement = 50;
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
@@ -211,9 +216,9 @@ public class PlayerController : MonoBehaviour
     // Method to deactivate rocket boost
     private void ActivateSpeedBoost()
     {
-        forwardMovementSpeed *= 1.5f; // Increase speed by 50%
+        forwardMovementSpeed *= (1.5f + 0.1f * speedBoostLevel);
+        speedBoostTimer = 5.0f + speedBoostLevel;
         speedBoostActive = true;
-        speedBoostTimer = 5.0f; // Set duration
     }
 
     private void DeactivateSpeedBoost()
@@ -225,7 +230,7 @@ public class PlayerController : MonoBehaviour
     private void ActivateShield()
     {
         shieldActive = true;
-        shieldTimer = 10.0f; // Set duration
+        shieldTimer = 10.0f + shieldLevel;
     }
 
     private void DeactivateShield()
@@ -236,9 +241,9 @@ public class PlayerController : MonoBehaviour
     private void ActivateRocketBoost()
     {
         rocketBoostActive = true;
-        rocketBoostTimer = 5.0f; // Set duration
-        forwardMovementSpeed *= 1.1f; // Increase speed by 10%
-        jetpackActive = true; // Keep the player flying
+        rocketBoostTimer = 5.0f + rocketBoostLevel;
+        forwardMovementSpeed *= (1.1f + 0.05f * rocketBoostLevel);
+        jetpackActive = true;
     }
 
     private void DeactivateRocketBoost()
@@ -246,6 +251,60 @@ public class PlayerController : MonoBehaviour
         rocketBoostActive = false;
         forwardMovementSpeed /= 1.1f; // Reset speed
         jetpackActive = false; // Allow the player to fall
+    }
+
+    public int GetSpeedBoostLevel()
+    {
+        return speedBoostLevel;
+    }
+
+    public int GetShieldLevel()
+    {
+        return shieldLevel;
+    }
+
+    public int GetRocketBoostLevel()
+    {
+        return rocketBoostLevel;
+    }
+
+    public bool CanAffordUpgrade(int currentLevel)
+    {
+        int upgradeCost = (currentLevel + 1) * upgradeIncrement;
+        return coinsCollected >= upgradeCost;
+    }
+
+    public void UpgradeSpeedBoost()
+    {
+        int upgradeCost = (speedBoostLevel + 1) * upgradeIncrement;
+        if (CanAffordUpgrade(speedBoostLevel))
+        {
+            coinsCollected -= upgradeCost;
+            speedBoostLevel++;
+            coinText.text = "Coins: " + coinsCollected;
+        }
+    }
+
+    public void UpgradeShield()
+    {
+        int upgradeCost = (shieldLevel + 1) * upgradeIncrement;
+        if (coinsCollected >= upgradeCost)
+        {
+            coinsCollected -= upgradeCost;
+            shieldLevel++;
+            coinText.text = "Coins: " + coinsCollected;
+        }
+    }
+
+    public void UpgradeRocketBoost()
+    {
+        int upgradeCost = (rocketBoostLevel + 1) * upgradeIncrement;
+        if (coinsCollected >= upgradeCost)
+        {
+            coinsCollected -= upgradeCost;
+            rocketBoostLevel++;
+            coinText.text = "Coins: " + coinsCollected;
+        }
     }
 
     private void SpawnPowerUp()

@@ -10,10 +10,33 @@ public class ShopController : MonoBehaviour
     public GameObject shopPanel; // Reference to the shop UI panel
     public TMP_Text coinText; // Reference to the Text element displaying the coin count
 
+    public Button speedBoostButton;
+    public Button shieldButton;
+    public Button rocketBoostButton;
+
+    public TMP_Text speedBoostCostText;
+    public TMP_Text shieldCostText;
+    public TMP_Text rocketBoostCostText;
+
     void Start()
     {
         // Open the shop when the game starts
         OpenShop();
+    }
+
+    void Update()
+    {
+        int speedBoostNextCost = (playerController.GetSpeedBoostLevel() + 1) * playerController.upgradeIncrement;
+        int shieldNextCost = (playerController.GetShieldLevel() + 1) * playerController.upgradeIncrement;
+        int rocketBoostNextCost = (playerController.GetRocketBoostLevel() + 1) * playerController.upgradeIncrement;
+
+        speedBoostButton.interactable = playerController.CanAffordUpgrade(playerController.GetSpeedBoostLevel());
+        shieldButton.interactable = playerController.CanAffordUpgrade(playerController.GetShieldLevel());
+        rocketBoostButton.interactable = playerController.CanAffordUpgrade(playerController.GetRocketBoostLevel());
+
+        speedBoostCostText.text = "Speed Boost Upgrade Cost: " + speedBoostNextCost;
+        shieldCostText.text = "Shield Upgrade Cost: " + shieldNextCost;
+        rocketBoostCostText.text = "Rocket Boost Upgrade Cost: " + rocketBoostNextCost;
     }
 
     public void OpenShop()
