@@ -166,6 +166,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(2);
         movement = false;
         isDead = true;  // Set isDead to true
+        GetComponent<Collider2D>().enabled = false;
         shopController.OpenShop();
     }
 
@@ -184,6 +185,7 @@ public class PlayerController : MonoBehaviour
         // Reset player state
         isDead = false;
         movement = true;
+        GetComponent<Collider2D>().enabled = true;
 
         // Reset other gameplay elements if needed
         distanceTraveled = 0.0f;
